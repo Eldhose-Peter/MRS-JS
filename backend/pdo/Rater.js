@@ -16,7 +16,7 @@ export class Rater {
     }
 
     hasRating(item) {
-        if (item in this.myRatings.keys())
+        if (this.myRatings.has(item))
             return true;
         return false;
     }
@@ -26,7 +26,7 @@ export class Rater {
     }
 
     getRating(item) {
-        if (item in this.myRatings.keys())
+        if (this.myRatings.has(item))
             return this.myRatings.get(item).getValue();
         return -1;
     }

@@ -14,6 +14,7 @@ export class RatingsRunner {
     getAverageByID(movieId, minimalRaters) {
         let numRates =[];
 
+        this.myRaters = RaterDB.getRaters();
         while(true){
             let item = this.myRaters.next();
             let rater = item.value
@@ -22,11 +23,10 @@ export class RatingsRunner {
 
             if (rater.hasRating(movieId)) {
                 numRates.push(rater.getRating(movieId))
-            }
+            } 
         }
 
         let sum = 0.0
-
         //only take the average if there is atleast minimum number of Raters
         if (numRates.length >= minimalRaters) {
             numRates.forEach((rate) => {
@@ -57,11 +57,10 @@ export class RatingsRunner {
             if(item.done)
                 break
             avgRating = this.getAverageByID(movieId, minimalRaters);
-
             if(avgRating>0.0)
             {
                 rating=new Rating(movieId, avgRating);
-                rList.add(rating);
+                rList.push(rating);
             }
 
         }
@@ -116,13 +115,19 @@ export class RatingsRunner {
         let ourRatings = []
         let curRater = RaterDB.getRater(raterID)
         var rating;
-        this.myRaters.forEach((rater) => {
+
+        this.myRaters = RaterDB.getRaters();
+        while(true){
+            let item = this.myRaters.next();
+            let rater = item.value
+            if(item.done)
+                break
 
             if (rater.getID() != (raterId)) {
                 rating = new Rating(rater.getID(), dotProduct(curRater, rater));
                 ourRatings.add(rating);
             }
-        })
+        }
 
 
         //Note that in each Rating object the item field is a rater’s ID, and the value
