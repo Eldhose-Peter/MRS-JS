@@ -2,7 +2,7 @@ var fs = require('fs')
 var path = require('path')
 var os = require('os')
 const { parse } = require("csv-parse");
-const Rater = require('../pdo/Rater');
+const Rater = require("../pdo/Rater");
 
 class RaterDB {
     static ourRaters;
@@ -26,9 +26,9 @@ class RaterDB {
         var filePath = path.join(os.homedir(), 'Documents/MRS/backend/database/CSVdata', filename)
         fs.createReadStream(filePath)
             .pipe(parse({ delimiter: ",", from_line: 2 }))
-            .on("data", function (row) {
+            .on("data", (row) => {
                 //console.log(row);
-                addRaterRating(row[0], row[1], row[2])
+                this.addRaterRating(row[0], row[1], row[2])
 
             })
             .on("end", function () {
@@ -44,7 +44,7 @@ class RaterDB {
 
         var rater;
 
-        if (raterID in this.ourRaters.keys) {
+        if (this.ourRaters.has(raterID)) {
             rater = this.ourRaters.get(raterID);
         }
         else {

@@ -1,4 +1,5 @@
 const express = require('express')
+const MovieDB = require('./database/MovieDB')
 const RaterDB = require('./database/RaterDB')
 const app = express()
 
@@ -20,8 +21,10 @@ app.get('/',(req,res)=>{
 });
 
 app.get('/test',(req,res)=>{
-    let raterDB = new RaterDB();
-    raterDB.initialize('ratings_short.csv')
+    // let raterDB = new RaterDB();
+    // raterDB.initialize('ratings_short.csv')
+    let movieDB= new MovieDB()
+    movieDB.initialize('ratedmovies_short.csv')
     res.send('<h1>Testing Endpoint</h1>')
 })
 

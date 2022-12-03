@@ -5,12 +5,13 @@ class Rater {
     myID;
     myRatings;
 
-    Rater(id){
+    constructor(id){
         this.myID =id
         this.myRatings = new Map();
     }
 
     addRating(item,rating){
+      
         this.myRatings.set(item,new Rating(item,rating));
     }
 
