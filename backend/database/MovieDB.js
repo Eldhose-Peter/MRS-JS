@@ -102,6 +102,12 @@ class MovieDB {
     //     return list;
     // }
 
+    // TODO : remove this function after implementing Filters
+    getMovieIdList(){
+        this.initialize();
+        return this.ourMovies.keys()
+    }
+
 }
 
 module.exports =MovieDB

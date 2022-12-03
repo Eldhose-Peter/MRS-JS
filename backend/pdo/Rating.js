@@ -20,10 +20,10 @@ class Rating {
         return "["+this.getItem+","+this.getValue+"]";
     }
 
-    compareTo(otherRating){
-        if(this.value<otherRating.value) 
+    compareTo(aRating,bRating){
+        if(aRating.value<bRating.value) 
             return -1;
-        if(this.value>otherRating.value)
+        if(aRating.value>bRating.value)
             return 1;
         return 0;
     }
