@@ -2,45 +2,43 @@ import { createReadStream } from 'fs';
 import { join } from 'path';
 import { homedir } from 'os';
 import { parse } from "csv-parse";
-import Rater from "../pdo/Rater";
+import { Rater }from "../pdo/Rater.js";
 
 export class RaterDB {
-    static ourRaters;
+    ourRaters;
 
-    initialize() {
-        if (!this.ourRaters) {
-            this.ourRaters = new Map()
-        }
-    }
-
-    initialize(filename) {
+    static initialize() {
         if (!this.ourRaters) {
             this.ourRaters = new Map();
-            this.addRatings(filename)
+            this.addRatings('ratings_short.csv')
         }
     }
 
-    addRatings(filename) {
-        this.initialize()
+    // static initialize(filename) {
+    //     if (!this.ourRaters) {
+    //         this.ourRaters = new Map();
+    //         this.addRatings(filename)
+    //     }
+    // }
+
+    static addRatings(filename) {
 
         var filePath = join(homedir(), 'Documents/MRS/backend/database/CSVdata', filename)
         createReadStream(filePath)
             .pipe(parse({ delimiter: ",", from_line: 2 }))
             .on("data", (row) => {
-                //console.log(row);
                 this.addRaterRating(row[0], row[1], row[2])
 
             })
             .on("end", function () {
-                console.log("finished reading from CSV ");
+                console.log("finished reading from ratings CSV ");
             })
             .on("error", function (error) {
                 console.log(error.message);
             });
     }
 
-    addRaterRating(raterID, movieID, rating) {
-        this.initialize();
+    static addRaterRating(raterID, movieID, rating) {
 
         var rater;
 
@@ -55,19 +53,19 @@ export class RaterDB {
 
     }
 
-    getRater(id) {
+    static getRater(id) {
         this.initialize();
         return this.ourRaters.get(id)
     }
 
-    getRaters() {
+    static getRaters() {
         this.initialize();
         var list = this.ourRaters.values();
         return list;
 
     }
 
-    size() {
+    static size() {
         this.ourRaters.size;
     }
 

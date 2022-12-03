@@ -2,27 +2,27 @@ import { createReadStream } from 'fs';
 import { join } from 'path';
 import { homedir } from 'os';
 import { parse } from "csv-parse";
-import Movie from '../pdo/Movie';
+import {Movie} from '../pdo/Movie.js';
 
 export class MovieDB {
     ourMovies; //maps movieId to movie
 
-    initialize(moviefile) {
+    // static initialize(moviefile) {
+    //     if (!this.ourMovies) {
+    //         this.ourMovies = new Map();
+    //         this.loadMovies(moviefile);
+    //     }
+    // }
+
+    static initialize() {
         if (!this.ourMovies) {
             this.ourMovies = new Map();
-            this.loadMovies(moviefile);
+            this.loadMovies("ratedmovies_short.csv");
         }
     }
 
-    initialize() {
-        if (!this.ourMovies) {
-            this.ourMovies = new Map();
-            this.loadMovies("ratedmoviesfull.csv");
-        }
-    }
 
-
-    loadMovies(filename) {
+    static loadMovies(filename) {
 
         var filePath = join(homedir(), 'Documents/MRS/backend/database/CSVdata', filename)
         createReadStream(filePath)
@@ -34,59 +34,59 @@ export class MovieDB {
 
             })
             .on("end", function () {
-                console.log("finished reading from CSV ");
+                console.log("finished reading from movie CSV ");
             })
             .on("error", function (error) {
                 console.log(error.message);
             });
     }
 
-    containsID(id) {
+    static containsID(id) {
         this.initialize();
         return this.ourMovies.has(id);
     }
 
-    getYear(id) {
+    static getYear(id) {
         this.initialize();
         return this.ourMovies.get(id).getYear();
     }
 
-    getGenres(id) {
+    static getGenres(id) {
         this.initialize();
         return this.ourMovies.get(id).getGenres();
     }
 
-    getTitle(id) {
+    static getTitle(id) {
         this.initialize();
         return this.ourMovies.get(id).getTitle();
     }
 
-    getMovie(id) {
+    static getMovie(id) {
         this.initialize();
         return this.ourMovies.get(id);
     }
 
-    getPoster(id) {
+    static getPoster(id) {
         this.initialize();
         return this.ourMovies.get(id).getPoster();
     }
 
-    getMinutes(id) {
+    static getMinutes(id) {
         this.initialize();
         return this.ourMovies.get(id).getMinutes();
     }
 
-    getCountry(id) {
+    static getCountry(id) {
         this.initialize();
         return this.ourMovies.get(id).getCountry();
     }
 
-    getDirector(id) {
+    static getDirector(id) {
         this.initialize();
         return this.ourMovies.get(id).getDirector();
     }
 
-    size() {
+    static size() {
         return this.ourMovies.size;
     }
 
@@ -103,7 +103,7 @@ export class MovieDB {
     // }
 
     // TODO : remove this function after implementing Filters
-    getMovieIdList() {
+    static getMovieIdList() {
         this.initialize();
         return this.ourMovies.keys()
     }

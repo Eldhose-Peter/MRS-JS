@@ -1,15 +1,15 @@
-import { MovieDB } from "../database/MovieDB";
-import { RaterDB } from "../database/RaterDB";
-import { RatingsRunner } from "./RatingsRunner";
-import Rating, { compareTo } from "../pdo/Rating";
+import { MovieDB } from "../database/MovieDB.js";
+import { RaterDB } from "../database/RaterDB.js";
+import { RatingsRunner } from "./RatingsRunner.js";
+import {Rating  } from "../pdo/Rating.js";
 
 export class MovieRunner {
 
     printAverageRatings() {
-        let ratingsRunner = new RatingsRunner("ratings_short.csv");
+        let ratingsRunner = new RatingsRunner();
         console.log("Number of raters read: ", RaterDB.size());
 
-        MovieDB.initialize("ratedmovies_short.csv");
+        MovieDB.initialize();
         console.log("Number of movies read: ", MovieDB.size());
 
 
@@ -17,7 +17,7 @@ export class MovieRunner {
         let minimumRaters = 1;
         ratings = ratingsRunner.getAverageRatings(minimumRaters);
         console.log("Number of movies found: " + ratings.length);
-        ratings.sort(compareTo)
+        ratings.sort(Rating.compareTo)
 
         let title;
 
@@ -29,10 +29,10 @@ export class MovieRunner {
     }
 
     printSimilarRatings() {
-        let ratingsRunner = new RatingsRunner("ratings.csv");
+        let ratingsRunner = new RatingsRunner();
         console.log("Number of raters read: " + RaterDB.size());
 
-        MovieDB.initialize("ratedmoviesfull.csv");
+        MovieDB.initialize();
         console.log("Number of movies read: " + MovieDB.size());
 
         let id = "65";

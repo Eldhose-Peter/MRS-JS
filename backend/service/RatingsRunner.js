@@ -1,24 +1,29 @@
-import { MovieDB } from "../database/MovieDB";
-import { RaterDB } from "../database/RaterDB";
-import Rating, { compareTo } from "../pdo/Rating";
+import { MovieDB } from "../database/MovieDB.js";
+import { RaterDB } from "../database/RaterDB.js";
+import { Rating } from "../pdo/Rating.js";
 
 export class RatingsRunner {
 
     myRaters;
-    constructor(filename) {
-        RaterDatabase.initialize(filename);
-        this.myRaters = RaterDatabase.getRaters();
+    constructor() {
+        RaterDB.initialize();
+        this.myRaters = RaterDB.getRaters();
     }
 
     //gets the average rating for a movieId
     getAverageByID(movieId, minimalRaters) {
-        var numRates;
+        let numRates =[];
 
-        this.myRaters.forEach(rater => {
+        while(true){
+            let item = this.myRaters.next();
+            let rater = item.value
+            if(item.done)
+                break
+
             if (rater.hasRating(movieId)) {
                 numRates.push(rater.getRating(movieId))
             }
-        });
+        }
 
         let sum = 0.0
 
@@ -31,6 +36,36 @@ export class RatingsRunner {
             return sum / numRates.length
         }
         return 0.0
+    }
+
+
+    getAverageRatings(minimalRaters)
+    {
+        let movieIDList = []
+        let rList = []
+        let rating;
+
+        //TODO : filter by true filter
+        //movieIDList = MovieDB.filterBy(new TrueFilter());
+         movieIDList = MovieDB.getMovieIdList()
+
+        let avgRating;
+
+        while(true){
+            let item = movieIDList.next();
+            let movieId = item.value
+            if(item.done)
+                break
+            avgRating = this.getAverageByID(movieId, minimalRaters);
+
+            if(avgRating>0.0)
+            {
+                rating=new Rating(movieId, avgRating);
+                rList.add(rating);
+            }
+
+        }
+        return rList;
     }
 
     //TODO : implement Filters
@@ -92,16 +127,16 @@ export class RatingsRunner {
 
         //Note that in each Rating object the item field is a rater’s ID, and the value
         //field is the dot product comparison between that rater and the rater whose ID is
-        //the parameter to ​getSimilarities
+        //the parameter to ​getSimilarities 
         //Collections.sort(ourRatings,Collections.reverseOrder());
-        ourRatings.sort(compareTo)
+        ourRatings.sort(Rating.compareTo)
         return ourRatings;
     }
 
     //gets recommended movies from raters with similar ratings
     getSimilarRatings(raterId, numSimilarRaters, minimalRaters) {
         //raters ID and their closesness to curRater
-        let weightRatings = getSimilarities(raterId);
+        let weightRatings = this.getSimilarities(raterId);
         console.log(weightRatings.length);
 
         // TODO : use True Filter here
@@ -114,8 +149,12 @@ export class RatingsRunner {
         let rating;
         let rater;
 
-        movieIDList.forEach((movieId) => {
+        while(true) {
 
+            let item = movieIDList.next();
+            let movieId = item.value
+            if(item.done)
+                break
 
             let listRatings = []
             //System.out.println(movieId);
@@ -145,10 +184,9 @@ export class RatingsRunner {
                 rating = new Rating(movieId, sum / listRatings.length);
                 rList.add(rating);
             }
+        }
 
-        })
-
-        rList.sort(compareTo);
+        rList.sort(Rating.compareTo);
         return rList;
 
     }

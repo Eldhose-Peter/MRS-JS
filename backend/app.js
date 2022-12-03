@@ -1,6 +1,6 @@
 import express from 'express'
-import MovieDB from './database/MovieDB'
-import RaterDB from './database/RaterDB'
+import { MovieRunner } from './service/MovieRunner.js'
+
 const app = express()
 
 const PORT = 3001
@@ -21,10 +21,8 @@ app.get('/', (req, res) => {
 });
 
 app.get('/test', (req, res) => {
-    // let raterDB = new RaterDB();
-    // raterDB.initialize('ratings_short.csv')
-    let movieDB = new MovieDB()
-    movieDB.initialize('ratedmovies_short.csv')
+    let runner = new MovieRunner()
+    runner.printAverageRatings()
     res.send('<h1>Testing Endpoint</h1>')
 })
 
