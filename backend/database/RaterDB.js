@@ -66,7 +66,7 @@ export class RaterDB {
     }
 
     static size() {
-        this.ourRaters.size;
+        return this.ourRaters.size;
     }
 
 }
