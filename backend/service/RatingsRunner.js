@@ -1,7 +1,8 @@
-import Rater from "../pdo/Rater";
+import { MovieDB } from "../database/MovieDB";
+import { RaterDB } from "../database/RaterDB";
 import Rating, { compareTo } from "../pdo/Rating";
 
-class RatingRunner {
+export class RatingsRunner {
 
     myRaters;
     constructor(filename) {
@@ -9,6 +10,7 @@ class RatingRunner {
         this.myRaters = RaterDatabase.getRaters();
     }
 
+    //gets the average rating for a movieId
     getAverageByID(movieId, minimalRaters) {
         var numRates;
 
@@ -53,6 +55,7 @@ class RatingRunner {
     //     return rList;
     // }
 
+    //similarity between 2 users is calculated as the dotproduct 
     dotProduct(curRater, otherRater) {
         let curUserRating = curRater.getItemsRated()
 
@@ -95,6 +98,7 @@ class RatingRunner {
         return ourRatings;
     }
 
+    //gets recommended movies from raters with similar ratings
     getSimilarRatings(raterId, numSimilarRaters, minimalRaters) {
         //raters ID and their closesness to curRater
         let weightRatings = getSimilarities(raterId);
