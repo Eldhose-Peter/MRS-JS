@@ -1,4 +1,4 @@
-class Movie {
+export class Movie {
     id;
     title;
     year;
@@ -63,5 +63,3 @@ class Movie {
         return result;
     }
 }
-
-module.exports = Movie

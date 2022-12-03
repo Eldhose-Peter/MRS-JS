@@ -1,5 +1,5 @@
 
-class Rating {
+export class Rating {
     item;
     value;
 
@@ -29,4 +29,3 @@ class Rating {
     }
 }
 
-module.exports = Rating

@@ -206,11 +206,3 @@ class RatingRunner {
     // }
 
 }
-
-// function  compareTo(aRating,bRating){
-//     if(aRating.value<bRating.value) 
-//         return -1;
-//     if(aRating.value>bRating.value)
-//         return 1;
-//     return 0;
-// }

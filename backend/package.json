@@ -9,6 +9,7 @@
   },
   "author": "Eldhose Peter",
   "license": "ISC",
+  "type": "module",
   "dependencies": {
     "csv-parse": "^5.3.3",
     "express": "^4.18.2",

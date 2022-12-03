@@ -1,10 +1,10 @@
-var fs = require('fs')
-var path = require('path')
-var os = require('os')
-const { parse } = require("csv-parse");
-const Movie = require('../pdo/Movie');
+import { createReadStream } from 'fs';
+import { join } from 'path';
+import { homedir } from 'os';
+import { parse } from "csv-parse";
+import Movie from '../pdo/Movie';
 
-class MovieDB {
+export class MovieDB {
     ourMovies; //maps movieId to movie
 
     initialize(moviefile) {
@@ -24,8 +24,8 @@ class MovieDB {
 	
     loadMovies(filename) {
 
-        var filePath = path.join(os.homedir(), 'Documents/MRS/backend/database/CSVdata', filename)
-        fs.createReadStream(filePath)
+        var filePath = join(homedir(), 'Documents/MRS/backend/database/CSVdata', filename)
+        createReadStream(filePath)
             .pipe(parse({ delimiter: ",", from_line: 2 }))
             .on("data", (row)=> {
                 //console.log(row);
@@ -109,5 +109,3 @@ class MovieDB {
     }
 
 }
-
-module.exports =MovieDB

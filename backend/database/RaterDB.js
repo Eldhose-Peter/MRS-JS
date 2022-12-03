@@ -1,10 +1,10 @@
-var fs = require('fs')
-var path = require('path')
-var os = require('os')
-const { parse } = require("csv-parse");
-const Rater = require("../pdo/Rater");
+import { createReadStream } from 'fs';
+import { join } from 'path';
+import { homedir } from 'os';
+import { parse } from "csv-parse";
+import Rater from "../pdo/Rater";
 
-class RaterDB {
+export class RaterDB {
     static ourRaters;
 
     initialize() {
@@ -23,8 +23,8 @@ class RaterDB {
     addRatings(filename) {
         this.initialize()
 
-        var filePath = path.join(os.homedir(), 'Documents/MRS/backend/database/CSVdata', filename)
-        fs.createReadStream(filePath)
+        var filePath = join(homedir(), 'Documents/MRS/backend/database/CSVdata', filename)
+        createReadStream(filePath)
             .pipe(parse({ delimiter: ",", from_line: 2 }))
             .on("data", (row) => {
                 //console.log(row);
@@ -73,4 +73,3 @@ class RaterDB {
 
 }
 
-module.exports = RaterDB

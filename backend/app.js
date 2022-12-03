@@ -1,6 +1,6 @@
-const express = require('express')
-const MovieDB = require('./database/MovieDB')
-const RaterDB = require('./database/RaterDB')
+import express from 'express'
+import MovieDB from './database/MovieDB'
+import RaterDB from './database/RaterDB'
 const app = express()
 
 const PORT = 3001

@@ -1,6 +1,6 @@
-const Rating = require("./Rating");
+import Rating from "./Rating";
 
-class Rater {
+export class Rater {
 
     myID;
     myRatings;
@@ -45,4 +45,3 @@ class Rater {
     }
 }
 
-module.exports = Rater
