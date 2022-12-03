@@ -1,4 +1,5 @@
 const express = require('express')
+const RaterDB = require('./database/RaterDB')
 const app = express()
 
 const PORT = 3001
@@ -18,6 +19,11 @@ app.get('/',(req,res)=>{
     res.send('<h1>Hello World!</h1>')
 });
 
+app.get('/test',(req,res)=>{
+    let raterDB = new RaterDB();
+    raterDB.initialize('ratings_short.csv')
+    res.send('<h1>Testing Endpoint</h1>')
+})
 
 
 
