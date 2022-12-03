@@ -20,11 +20,11 @@ export class Rating {
         return "[" + this.getItem + "," + this.getValue + "]";
     }
 
-    compareTo(aRating, bRating) {
+    static compareTo(aRating, bRating) {
         if (aRating.value < bRating.value)
-            return -1;
-        if (aRating.value > bRating.value)
             return 1;
+        if (aRating.value > bRating.value)
+            return -1;
         return 0;
     }
 }

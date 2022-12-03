@@ -26,16 +26,16 @@ export class RatingsRunner {
             } 
         }
 
-        let sum = 0.0
+        let sum = 0
         //only take the average if there is atleast minimum number of Raters
         if (numRates.length >= minimalRaters) {
             numRates.forEach((rate) => {
-                sum += rate
+                sum += parseInt(rate)
             })
 
             return sum / numRates.length
         }
-        return 0.0
+        return 0
     }
 
 
@@ -98,14 +98,14 @@ export class RatingsRunner {
         let dotProduct = 0;
 
         curUserRating.forEach((movieID) => {
-            curRating = curRater.getRating(movieID)
+            curRating = parseInt(curRater.getRating(movieID))
             if (otherRater.hasRating(movieID)) {
-                otherRating = otherRater.getRating(movieID);
+                otherRating = parseInt(otherRater.getRating(movieID));
                 //translate a rating from the scale 0 to 10 to the scale ­-5 to 5
                 curRating -= 5;
                 otherRating -= 5;
 
-                dotProduct += (curRating * otherRating);
+                dotProduct += ( curRating * otherRating);
             }
         })
         return dotProduct;
@@ -183,7 +183,7 @@ export class RatingsRunner {
             if (listRatings.length >= minimalRaters) {
 
                 listRatings.forEach((rating) => {
-                    sum += rating;
+                    sum += parseInt(rating);
                 })
 
                 rating = new Rating(movieId, sum / listRatings.length);
@@ -236,7 +236,7 @@ export class RatingsRunner {
     //         {
     //             for(Double rating : listRatings)
     //             {
-    //                 sum+=rating;
+    //                 sum+=parseInt(rating);
     //             } 
     //             r = new Rating(movieId, sum/listRatings.size());
     //             rList.add(r);
