@@ -3,27 +3,27 @@ export class Rating {
     item;
     value;
 
-    constructor(item,value){
+    constructor(item, value) {
         this.item = item;
         this.value = value;
     }
 
-    getItem(){
+    getItem() {
         return this.item
     }
 
-    getValue(){
+    getValue() {
         return this.value
     }
 
-    toString(){
-        return "["+this.getItem+","+this.getValue+"]";
+    toString() {
+        return "[" + this.getItem + "," + this.getValue + "]";
     }
 
-    compareTo(aRating,bRating){
-        if(aRating.value<bRating.value) 
+    compareTo(aRating, bRating) {
+        if (aRating.value < bRating.value)
             return -1;
-        if(aRating.value>bRating.value)
+        if (aRating.value > bRating.value)
             return 1;
         return 0;
     }

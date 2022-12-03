@@ -49,25 +49,25 @@ export class RaterDB {
         }
         else {
             rater = new Rater(raterID)
-            this.ourRaters.set(raterID,rater)
+            this.ourRaters.set(raterID, rater)
         }
-        rater.addRating(movieID,rating)
+        rater.addRating(movieID, rating)
 
     }
 
-    getRater(id){
+    getRater(id) {
         this.initialize();
         return this.ourRaters.get(id)
     }
 
-    getRaters(){
+    getRaters() {
         this.initialize();
         var list = this.ourRaters.values();
         return list;
 
     }
 
-    size(){
+    size() {
         this.ourRaters.size;
     }
 

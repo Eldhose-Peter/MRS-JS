@@ -8,7 +8,7 @@ export class Movie {
     poster;
     minutes;
 
-    constructor(id, title, year, country, genres,director, minutes, poster) {
+    constructor(id, title, year, country, genres, director, minutes, poster) {
         // just in case data file contains extra whitespace
         this.id = id.trim();
         this.title = title.trim();
@@ -21,43 +21,43 @@ export class Movie {
     }
 
     // Returns ID associated with this item
-    getID () {
+    getID() {
         return this.id;
     }
 
     // Returns title of this item
-    getTitle () {
+    getTitle() {
         return this.title;
     }
 
     // Returns year in which this item was published
-    getYear () {
+    getYear() {
         return this.year;
     }
 
     // Returns genres associated with this item
-    getGenres () {
+    getGenres() {
         return this.genres;
     }
 
-    getCountry(){
+    getCountry() {
         return this.country;
     }
 
-    getDirector(){
+    getDirector() {
         return this.director;
     }
 
-    getPoster(){
+    getPoster() {
         return this.poster;
     }
 
-    getMinutes(){
+    getMinutes() {
         return this.minutes;
     }
 
     // Returns a string of the item's information
-    toString () {
+    toString() {
         let result = "Movie [id=" + this.id + ", title=" + this.title + ", year=" + this.year;
         result += ", genres= " + this.genres + "]";
         return result;

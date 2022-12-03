@@ -19,18 +19,18 @@ export class MovieDB {
             this.ourMovies = new Map();
             this.loadMovies("ratedmoviesfull.csv");
         }
-    }	
+    }
 
-	
+
     loadMovies(filename) {
 
         var filePath = join(homedir(), 'Documents/MRS/backend/database/CSVdata', filename)
         createReadStream(filePath)
             .pipe(parse({ delimiter: ",", from_line: 2 }))
-            .on("data", (row)=> {
+            .on("data", (row) => {
                 //console.log(row);
-                let movie = new Movie(row[0],row[1],row[2],row[3],row[4],row[5],row[6],row[7])
-                this.ourMovies.set(movie.getID(),movie)
+                let movie = new Movie(row[0], row[1], row[2], row[3], row[4], row[5], row[6], row[7])
+                this.ourMovies.set(movie.getID(), movie)
 
             })
             .on("end", function () {
@@ -62,27 +62,27 @@ export class MovieDB {
     }
 
     getMovie(id) {
-       this.initialize();
+        this.initialize();
         return this.ourMovies.get(id);
     }
 
     getPoster(id) {
-       this.initialize();
+        this.initialize();
         return this.ourMovies.get(id).getPoster();
     }
 
     getMinutes(id) {
-       this.initialize();
+        this.initialize();
         return this.ourMovies.get(id).getMinutes();
     }
 
     getCountry(id) {
-       this.initialize();
+        this.initialize();
         return this.ourMovies.get(id).getCountry();
     }
 
     getDirector(id) {
-       this.initialize();
+        this.initialize();
         return this.ourMovies.get(id).getDirector();
     }
 
@@ -103,7 +103,7 @@ export class MovieDB {
     // }
 
     // TODO : remove this function after implementing Filters
-    getMovieIdList(){
+    getMovieIdList() {
         this.initialize();
         return this.ourMovies.keys()
     }
