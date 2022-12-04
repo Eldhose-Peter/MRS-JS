@@ -22,7 +22,7 @@ app.get('/', (req, res) => {
 
 app.get('/test', (req, res) => {
     let runner = new MovieRunner()
-    runner.printAverageRatings()
+    runner.printSimilarRatings()
     res.send('<h1>Testing Endpoint</h1>')
 })
 

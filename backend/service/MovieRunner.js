@@ -35,14 +35,14 @@ export class MovieRunner {
         MovieDB.initialize();
         console.log("Number of movies read: " + MovieDB.size());
 
-        let id = "65"; //this will be the id of the current user
+        let id = "5"; //this will be the id of the current user
         let numSimilarRaters = 20;
         let minimalRaters = 5;
         let ratings = ratingsRunner.getSimilarRatings(id, numSimilarRaters, minimalRaters);
-        console.log("Rating size :" + ratings.size());
+        console.log("Rating size :" + ratings.length);
 
         ratings.forEach(rating => {
-            title = MovieDB.getTitle(rating.getItem());
+            let title = MovieDB.getTitle(rating.getItem());
             console.log(rating.getValue() + "  " + title);
         });
 

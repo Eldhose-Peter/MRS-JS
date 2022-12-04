@@ -97,7 +97,12 @@ export class RatingsRunner {
         let otherRating;
         let dotProduct = 0;
 
-        curUserRating.forEach((movieID) => {
+        while(true){
+            let item = curUserRating.next();
+            let movieID = item.value
+            if(item.done)
+                break
+
             curRating = parseInt(curRater.getRating(movieID))
             if (otherRater.hasRating(movieID)) {
                 otherRating = parseInt(otherRater.getRating(movieID));
@@ -107,13 +112,13 @@ export class RatingsRunner {
 
                 dotProduct += ( curRating * otherRating);
             }
-        })
+        }
         return dotProduct;
     }
 
     getSimilarities(raterId) {
         let ourRatings = []
-        let curRater = RaterDB.getRater(raterID)
+        let curRater = RaterDB.getRater(raterId)
         var rating;
 
         this.myRaters = RaterDB.getRaters();
@@ -124,8 +129,8 @@ export class RatingsRunner {
                 break
 
             if (rater.getID() != (raterId)) {
-                rating = new Rating(rater.getID(), dotProduct(curRater, rater));
-                ourRatings.add(rating);
+                rating = new Rating(rater.getID(), this.dotProduct(curRater, rater));
+                ourRatings.push(rating);
             }
         }
 
@@ -139,15 +144,15 @@ export class RatingsRunner {
     }
 
     //gets recommended movies from raters with similar ratings
-    getSimilarRatings(raterId, numSimilarRaters, minimalRaters) {
+    getSimilarRatings(curRaterId, numSimilarRaters, minimalRaters) {
         //raters ID and their closesness to curRater
-        let weightRatings = this.getSimilarities(raterId);
-        console.log(weightRatings.length);
+        let weightRatings = this.getSimilarities(curRaterId);
+        //console.log(weightRatings);
 
         // TODO : use True Filter here
         //movieIDList = MovieDatabase.filterBy(new TrueFilter());
         let movieIDList = MovieDB.getMovieIdList()
-        console.log(movieIDList.length);
+        //console.log(movieIDList.length);
 
         //movie ID and their weighted average ratings
         let rList = [];
@@ -163,10 +168,11 @@ export class RatingsRunner {
 
             let listRatings = []
             //System.out.println(movieId);
-            for (let i = 0; i < numSimilarRaters; i++) {
-                rating = weightRatings.get(i);
+            let i =0;
+            for (i = 0; i < numSimilarRaters; i++) {
+                rating = weightRatings[0];
                 let raterId = rating.getItem();
-                let raterClossness = rating.getValue();
+                let raterClossness = parseInt(rating.getValue());
 
                 if (raterClossness <= 0)
                     break;
@@ -174,7 +180,7 @@ export class RatingsRunner {
                 rater = RaterDB.getRater(raterId);
 
                 if (rater.hasRating(movieId)) {
-                    listRatings.add(raterClossness * rater.getRating(movieId));
+                    listRatings.push(raterClossness * parseInt(rater.getRating(movieId)));
                 }
 
             }
@@ -187,7 +193,7 @@ export class RatingsRunner {
                 })
 
                 rating = new Rating(movieId, sum / listRatings.length);
-                rList.add(rating);
+                rList.push(rating);
             }
         }
 
