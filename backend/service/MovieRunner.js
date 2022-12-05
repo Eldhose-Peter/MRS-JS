@@ -1,51 +1,74 @@
 import { MovieDB } from "../database/MovieDB.js";
 import { RaterDB } from "../database/RaterDB.js";
 import { RatingsRunner } from "./RatingsRunner.js";
-import {Rating  } from "../pdo/Rating.js";
+import { Rating } from "../pdo/Rating.js";
 
 export class MovieRunner {
 
     printAverageRatings() {
-        let ratingsRunner = new RatingsRunner();
-        console.log("Number of raters read: ", RaterDB.size());
 
-        MovieDB.initialize();
-        console.log("Number of movies read: ", MovieDB.size());
+        let ratingsRunner;
+        new Promise(async (resolve, reject) => {
+            ratingsRunner = new RatingsRunner();
+            await ratingsRunner.loadRaters().then((res) => {
+                console.log("Number of raters read: ", RaterDB.size());
+            })
+
+            await MovieDB.initialize().then((res) => {
+                console.log("Movie initialize status: ", res);
+                console.log("Number of movies read: ", MovieDB.size());
+            })
+            resolve('done')
+        }).then((res) => {
+
+            console.log("Loading status :", res);
+            let ratings = []
+            let minimumRaters = 1;
+            ratings = ratingsRunner.getAverageRatings(minimumRaters);
+            console.log("Number of movies found: " + ratings.length);
+            ratings.sort(Rating.compareTo)
+
+            let title;
+
+            ratings.forEach(rating => {
+                title = MovieDB.getTitle(rating.getItem());
+                console.log(rating.getValue() + "  " + title);
+            });
+        })
 
 
-        let ratings = []
-        let minimumRaters = 1;
-        ratings = ratingsRunner.getAverageRatings(minimumRaters);
-        console.log("Number of movies found: " + ratings.length);
-        ratings.sort(Rating.compareTo)
-
-        let title;
-
-        ratings.forEach(rating => {
-            title = MovieDB.getTitle(rating.getItem());
-            console.log(rating.getValue() + "  " + title);
-        });
 
     }
 
     printSimilarRatings() {
-        let ratingsRunner = new RatingsRunner();
-        console.log("Number of raters read: " + RaterDB.size());
+        let ratingsRunner;
+        new Promise(async (resolve, reject) => {
+            ratingsRunner = new RatingsRunner();
+            await ratingsRunner.loadRaters().then((res) => {
+                console.log("Number of raters read: ", RaterDB.size());
+            })
 
-        MovieDB.initialize();
-        console.log("Number of movies read: " + MovieDB.size());
+            await MovieDB.initialize().then((res) => {
+                console.log("Movie initialize status: ", res);
+                console.log("Number of movies read: ", MovieDB.size());
+            })
+            resolve('done')
+        }).then((res) => {
 
-        let id = "5"; //this will be the id of the current user
-        let numSimilarRaters = 20;
-        let minimalRaters = 5;
-        let ratings = ratingsRunner.getSimilarRatings(id, numSimilarRaters, minimalRaters);
-        console.log("Rating size :" + ratings.length);
+            console.log("Loading status :", res);
 
-        ratings.forEach(rating => {
-            let title = MovieDB.getTitle(rating.getItem());
-            console.log(rating.getValue() + "  " + title);
-        });
+            let id = "5"; //this will be the id of the current user
+            let numSimilarRaters = 20;
+            let minimalRaters = 5;
+            let ratings = ratingsRunner.getSimilarRatings(id, numSimilarRaters, minimalRaters);
+            console.log("Rating size :" + ratings.length);
 
+            ratings.forEach(rating => {
+                let title = MovieDB.getTitle(rating.getItem());
+                console.log(rating.getValue() + "  " + title);
+            });
+
+        })
     }
 
     //TODO : implement filters
@@ -116,7 +139,7 @@ export class MovieRunner {
 
     //     let ratings = [];
     //     let minimumraters = 5;
-        
+
     //     let genre = "Adventure";
     //     let min = 100;
     //     let max = 200;
@@ -176,7 +199,7 @@ export class MovieRunner {
 
     //     let title;
     //     let minutes;
-      
+
     //     let Year;
 
 

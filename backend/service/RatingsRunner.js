@@ -1,3 +1,4 @@
+import { resolve } from "path";
 import { MovieDB } from "../database/MovieDB.js";
 import { RaterDB } from "../database/RaterDB.js";
 import { Rating } from "../pdo/Rating.js";
@@ -5,9 +6,13 @@ import { Rating } from "../pdo/Rating.js";
 export class RatingsRunner {
 
     myRaters;
-    constructor() {
-        RaterDB.initialize();
-        this.myRaters = RaterDB.getRaters();
+
+    async loadRaters(){
+        
+        return RaterDB.initialize().then((res)=>{
+            console.log("Rater initialize status: ", res);
+            this.myRaters = RaterDB.getRaters();
+        });
     }
 
     //gets the average rating for a movieId

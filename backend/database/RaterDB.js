@@ -10,7 +10,7 @@ export class RaterDB {
     static initialize() {
         if (!this.ourRaters) {
             this.ourRaters = new Map();
-            this.addRatings('ratings_short.csv')
+            return this.addRatings('ratings_short.csv')
         }
     }
 
@@ -24,7 +24,8 @@ export class RaterDB {
     static addRatings(filename) {
 
         var filePath = join(homedir(), 'Documents/MRS/backend/database/CSVdata', filename)
-        createReadStream(filePath)
+        return new Promise((resolve,reject)=>{
+            createReadStream(filePath)
             .pipe(parse({ delimiter: ",", from_line: 2 }))
             .on("data", (row) => {
                 this.addRaterRating(row[0], row[1], row[2])
@@ -32,10 +33,14 @@ export class RaterDB {
             })
             .on("end", function () {
                 console.log("finished reading from ratings CSV ");
+                resolve('success')
             })
             .on("error", function (error) {
                 console.log(error.message);
+                reject('failure')
             });
+        })
+        
     }
 
     static addRaterRating(raterID, movieID, rating) {

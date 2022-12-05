@@ -2,7 +2,7 @@ import { createReadStream } from 'fs';
 import { join } from 'path';
 import { homedir } from 'os';
 import { parse } from "csv-parse";
-import {Movie} from '../pdo/Movie.js';
+import { Movie } from '../pdo/Movie.js';
 
 export class MovieDB {
     ourMovies; //maps movieId to movie
@@ -17,28 +17,38 @@ export class MovieDB {
     static initialize() {
         if (!this.ourMovies) {
             this.ourMovies = new Map();
-            this.loadMovies("ratedmovies_short.csv");
-        }
+            return this.loadMovies("ratedmovies_short.csv")
+        }            
     }
 
 
     static loadMovies(filename) {
+        try {
+            let filePath = join(homedir(), 'Documents/MRS/backend/database/CSVdata', filename)
+            return new Promise((resolve,reject)=>{
 
-        var filePath = join(homedir(), 'Documents/MRS/backend/database/CSVdata', filename)
-        createReadStream(filePath)
-            .pipe(parse({ delimiter: ",", from_line: 2 }))
-            .on("data", (row) => {
-                //console.log(row);
-                let movie = new Movie(row[0], row[1], row[2], row[3], row[4], row[5], row[6], row[7])
-                this.ourMovies.set(movie.getID(), movie)
+                createReadStream(filePath)
+                .pipe(parse({ delimiter: ",", from_line: 2 }))
+                .on("data", (row) => {
+                    let movie = new Movie(row[0], row[1], row[2], row[3], row[4], row[5], row[6], row[7])
+                    this.ourMovies.set(movie.getID(), movie)
+
+                })
+                .on("end", function () {
+                    console.log("finished reading from movie CSV ");
+                    resolve('success')
+                })
+                .on("error", function (error) {
+                    console.log(error.message);
+                    reject('error')
+                });
 
             })
-            .on("end", function () {
-                console.log("finished reading from movie CSV ");
-            })
-            .on("error", function (error) {
-                console.log(error.message);
-            });
+            
+        }
+        catch (error) {
+            console.log("Error in loading movies : ", error);
+        }
     }
 
     static containsID(id) {
