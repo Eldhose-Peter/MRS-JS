@@ -2,14 +2,21 @@ import { Router } from "express";
 import { MovieRunner } from "../service/MovieRunner.js";
 const ratingsApi = Router();
 
+
+var runner;
+
 ratingsApi.get("/", function (req, res) {
     res.send("This is ratings API endpoint");
 });
 
-ratingsApi.get("/averageRatings", function (req, res) {
+
+ratingsApi.get("/averageRatings", async function (req, res) {
 
     try {
-        let runner = new MovieRunner();
+        if(!runner){
+            runner = new MovieRunner();
+            await runner.initializeDB();
+        }
         runner.printAverageRatings().then((val)=>{
             //console.log("result:", val)
             res.status(200).json(val)
@@ -20,10 +27,13 @@ ratingsApi.get("/averageRatings", function (req, res) {
     }
 });
 
-ratingsApi.get("/similarRatings", function (req, res) {
+ratingsApi.get("/similarRatings", async function (req, res) {
 
     try {
-        let runner = new MovieRunner();
+        if(!runner){
+            runner = new MovieRunner();
+            await runner.initializeDB();
+        }
         runner.printSimilarRatings().then((val)=>{
             //console.log("result:", val)
             res.status(200).json(val)

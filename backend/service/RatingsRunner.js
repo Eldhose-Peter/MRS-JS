@@ -7,6 +7,10 @@ export class RatingsRunner {
 
     myRaters;
 
+    getRaters(){
+        return this.myRaters;
+    }
+
     async loadRaters(){
         
         return RaterDB.initialize().then((res)=>{
@@ -94,7 +98,9 @@ export class RatingsRunner {
     //     return rList;
     // }
 
+
     //similarity between 2 users is calculated as the dotproduct 
+    
     dotProduct(curRater, otherRater) {
         let curUserRating = curRater.getItemsRated()
 

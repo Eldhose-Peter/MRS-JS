@@ -5,13 +5,12 @@ import { Rating } from "../pdo/Rating.js";
 
 export class MovieRunner {
 
-    async printAverageRatings() {
+    ratingsRunner;
 
-        let ratingsRunner;
-        let ratings = []
+    async initializeDB() {
         await new Promise(async (resolve, reject) => {
-            ratingsRunner = new RatingsRunner();
-            await ratingsRunner.loadRaters().then((res) => {
+            this.ratingsRunner = new RatingsRunner();
+            await this.ratingsRunner.loadRaters().then((res) => {
                 console.log("Number of raters read: ", RaterDB.size());
             })
 
@@ -21,44 +20,30 @@ export class MovieRunner {
             })
             resolve('done')
         }).then((res) => {
-
-            console.log("Loading status :", res);
-            
-            let minimumRaters = 1;
-            ratings = ratingsRunner.getAverageRatings(minimumRaters);
-            console.log("Number of movies found: " + ratings.length);
-            ratings.sort(Rating.compareTo)
-
+            console.log("initialize DB status : ", res);
         })
+
+    }
+
+    async printAverageRatings() {
+
+        let ratings = []
+        let minimumRaters = 1;
+        ratings = this.ratingsRunner.getAverageRatings(minimumRaters);
+        console.log("Number of movies found: " + ratings.length);
+        ratings.sort(Rating.compareTo)
         return ratings;
 
     }
 
     async printSimilarRatings() {
-        let ratingsRunner;
+
+        let id = "5"; //this will be the id of the current user
+        let numSimilarRaters = 20;
+        let minimalRaters = 5;
         let ratings = []
-        await new Promise(async (resolve, reject) => {
-            ratingsRunner = new RatingsRunner();
-            await ratingsRunner.loadRaters().then((res) => {
-                console.log("Number of raters read: ", RaterDB.size());
-            })
-
-            await MovieDB.initialize().then((res) => {
-                console.log("Movie initialize status: ", res);
-                console.log("Number of movies read: ", MovieDB.size());
-            })
-            resolve('done')
-        }).then((res) => {
-
-            console.log("Loading status :", res);
-
-            let id = "5"; //this will be the id of the current user
-            let numSimilarRaters = 20;
-            let minimalRaters = 5;
-            ratings = ratingsRunner.getSimilarRatings(id, numSimilarRaters, minimalRaters);
-            console.log("Rating size :" + ratings.length);
-
-        })
+        ratings = this.ratingsRunner.getSimilarRatings(id, numSimilarRaters, minimalRaters);
+        console.log("Number of movies found:" + ratings.length);
         return ratings;
 
     }

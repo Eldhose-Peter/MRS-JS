@@ -18,7 +18,7 @@ export class MovieDB {
         if (!this.ourMovies) {
             this.ourMovies = new Map();
             return this.loadMovies("ratedmovies_short.csv")
-        }            
+        }          
     }
 
 
