@@ -5,10 +5,11 @@ import { Rating } from "../pdo/Rating.js";
 
 export class MovieRunner {
 
-    printAverageRatings() {
+    async printAverageRatings() {
 
         let ratingsRunner;
-        new Promise(async (resolve, reject) => {
+        let ratings = []
+        await new Promise(async (resolve, reject) => {
             ratingsRunner = new RatingsRunner();
             await ratingsRunner.loadRaters().then((res) => {
                 console.log("Number of raters read: ", RaterDB.size());
@@ -22,21 +23,14 @@ export class MovieRunner {
         }).then((res) => {
 
             console.log("Loading status :", res);
-            let ratings = []
+            
             let minimumRaters = 1;
             ratings = ratingsRunner.getAverageRatings(minimumRaters);
             console.log("Number of movies found: " + ratings.length);
             ratings.sort(Rating.compareTo)
 
-            let title;
-
-            ratings.forEach(rating => {
-                title = MovieDB.getTitle(rating.getItem());
-                console.log(rating.getValue() + "  " + title);
-            });
         })
-
-
+        return ratings;
 
     }
 

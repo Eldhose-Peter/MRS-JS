@@ -1,5 +1,7 @@
 import express from 'express'
+import ratingsApi from './controller/ratingsApi.js'
 import { MovieRunner } from './service/MovieRunner.js'
+
 
 const app = express()
 
@@ -15,6 +17,7 @@ const requestLogger = (req, res, next) => {
 }
 
 app.use(requestLogger)
+app.use("/ratingsApi",ratingsApi);
 
 app.get('/', (req, res) => {
     res.send('<h1>Hello World!</h1>')
