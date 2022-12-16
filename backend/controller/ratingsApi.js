@@ -27,6 +27,23 @@ ratingsApi.get("/averageRatings", async function (req, res) {
     }
 });
 
+ratingsApi.get("/averageRatingsByDirector", async function (req, res) {
+
+    try {
+        if(!runner){
+            runner = new MovieRunner();
+            await runner.initializeDB();
+        }
+        runner.printAverageRatingsByDirector().then((val)=>{
+            //console.log("result:", val)
+            res.status(200).json(val)
+        })
+
+    } catch (error) {
+        res.sendStatus(500);
+    }
+});
+
 ratingsApi.get("/similarRatings", async function (req, res) {
 
     try {

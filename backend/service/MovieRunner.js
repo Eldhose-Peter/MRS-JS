@@ -2,6 +2,8 @@ import { MovieDB } from "../database/MovieDB.js";
 import { RaterDB } from "../database/RaterDB.js";
 import { RatingsRunner } from "./RatingsRunner.js";
 import { Rating } from "../pdo/Rating.js";
+import { DirectorFilter } from "../filters/DirectorFilter.js";
+import { TrueFilter } from "../filters/TrueFilter.js"
 
 export class MovieRunner {
 
@@ -29,7 +31,7 @@ export class MovieRunner {
 
         let ratings = []
         let minimumRaters = 1;
-        ratings = this.ratingsRunner.getAverageRatings(minimumRaters);
+        ratings = this.ratingsRunner.getAverageRatings(minimumRaters,new TrueFilter());
         console.log("Number of movies found: " + ratings.length);
         ratings.sort(Rating.compareTo)
         return ratings;
@@ -42,10 +44,20 @@ export class MovieRunner {
         let numSimilarRaters = 20;
         let minimalRaters = 5;
         let ratings = []
-        ratings = this.ratingsRunner.getSimilarRatings(id, numSimilarRaters, minimalRaters);
+        ratings = this.ratingsRunner.getSimilarRatings(id, numSimilarRaters, minimalRaters,new TrueFilter());
         console.log("Number of movies found:" + ratings.length);
         return ratings;
 
+    }
+
+    async printAverageRatingsByDirector(){
+        let ratings = []
+        let minimumRaters = 1;
+        let directors = "Michael Mann,Oliver Stone,Spike Jonze"
+        ratings = this.ratingsRunner.getAverageRatingsByFilter(minimumRaters,new DirectorFilter(directors) );
+        console.log("Number of movies found: " + ratings.length);
+        ratings.sort(Rating.compareTo)
+        return ratings;
     }
 
     //TODO : implement filters

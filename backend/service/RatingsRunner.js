@@ -7,100 +7,41 @@ export class RatingsRunner {
 
     myRaters;
 
-    getRaters(){
+    getRaters() {
         return this.myRaters;
     }
 
-    async loadRaters(){
-        
-        return RaterDB.initialize().then((res)=>{
+    async loadRaters() {
+
+        return RaterDB.initialize().then((res) => {
             console.log("Rater initialize status: ", res);
             this.myRaters = RaterDB.getRaters();
         });
     }
 
-    //gets the average rating for a movieId
-    getAverageByID(movieId, minimalRaters) {
-        let numRates =[];
 
-        this.myRaters = RaterDB.getRaters();
-        while(true){
-            let item = this.myRaters.next();
-            let rater = item.value
-            if(item.done)
-                break
+    getAverageRatings(minimalRaters, filterCriteria) {
 
-            if (rater.hasRating(movieId)) {
-                numRates.push(rater.getRating(movieId))
-            } 
-        }
-
-        let sum = 0
-        //only take the average if there is atleast minimum number of Raters
-        if (numRates.length >= minimalRaters) {
-            numRates.forEach((rate) => {
-                sum += parseInt(rate)
-            })
-
-            return sum / numRates.length
-        }
-        return 0
-    }
-
-
-    getAverageRatings(minimalRaters)
-    {
-        let movieIDList = []
+        let movieIDList = [];
         let rList = []
         let rating;
-
-        //TODO : filter by true filter
-        //movieIDList = MovieDB.filterBy(new TrueFilter());
-         movieIDList = MovieDB.getMovieIdList()
-
+        movieIDList = MovieDB.filterBy(filterCriteria);
         let avgRating;
+        movieIDList.forEach((id) => {
+            avgRating = this.getAverageByID(id, minimalRaters);
 
-        while(true){
-            let item = movieIDList.next();
-            let movieId = item.value
-            if(item.done)
-                break
-            avgRating = this.getAverageByID(movieId, minimalRaters);
-            if(avgRating>0.0)
-            {
-                rating=new Rating(movieId, avgRating);
+            if (avgRating > 0.0) {
+                rating = new Rating(id, avgRating);
                 rList.push(rating);
             }
+        })
 
-        }
         return rList;
     }
 
-    //TODO : implement Filters
-    // public ArrayList<Rating> getAverageRatingsByFilter(int minimalRaters , Filter filterCriteria)
-    // {
-
-    //     ArrayList<String> movieIDList = new ArrayList<>();
-    //     ArrayList<Rating> rList = new ArrayList<>();
-    //     Rating r;
-    //     movieIDList = MovieDatabase.filterBy(filterCriteria);
-    //     Double avgRating;
-    //     for(String id : movieIDList)
-    //     {
-    //         avgRating = getAverageByID(id, minimalRaters);
-
-    //         if(avgRating>0.0)
-    //         {
-    //            r=new Rating(id, avgRating);
-    //            rList.add(r);
-    //         }
-    //     }
-    //     return rList;
-    // }
-
 
     //similarity between 2 users is calculated as the dotproduct 
-    
+
     dotProduct(curRater, otherRater) {
         let curUserRating = curRater.getItemsRated()
 
@@ -108,10 +49,10 @@ export class RatingsRunner {
         let otherRating;
         let dotProduct = 0;
 
-        while(true){
+        while (true) {
             let item = curUserRating.next();
             let movieID = item.value
-            if(item.done)
+            if (item.done)
                 break
 
             curRating = parseInt(curRater.getRating(movieID))
@@ -121,7 +62,7 @@ export class RatingsRunner {
                 curRating -= 5;
                 otherRating -= 5;
 
-                dotProduct += ( curRating * otherRating);
+                dotProduct += (curRating * otherRating);
             }
         }
         return dotProduct;
@@ -133,10 +74,10 @@ export class RatingsRunner {
         var rating;
 
         this.myRaters = RaterDB.getRaters();
-        while(true){
+        while (true) {
             let item = this.myRaters.next();
             let rater = item.value
-            if(item.done)
+            if (item.done)
                 break
 
             if (rater.getID() != (raterId)) {
@@ -155,14 +96,13 @@ export class RatingsRunner {
     }
 
     //gets recommended movies from raters with similar ratings
-    getSimilarRatings(curRaterId, numSimilarRaters, minimalRaters) {
+    getSimilarRatings(curRaterId, numSimilarRaters, minimalRaters, filterCriteria) {
         //raters ID and their closesness to curRater
         let weightRatings = this.getSimilarities(curRaterId);
         //console.log(weightRatings);
 
-        // TODO : use True Filter here
-        //movieIDList = MovieDatabase.filterBy(new TrueFilter());
-        let movieIDList = MovieDB.getMovieIdList()
+
+        let movieIDList = MovieDB.filterBy(filterCriteria)
         //console.log(movieIDList.length);
 
         //movie ID and their weighted average ratings
@@ -170,16 +110,11 @@ export class RatingsRunner {
         let rating;
         let rater;
 
-        while(true) {
 
-            let item = movieIDList.next();
-            let movieId = item.value
-            if(item.done)
-                break
-
+        movieIDList.forEach(movieId => {
             let listRatings = []
             //System.out.println(movieId);
-            let i =0;
+            let i = 0;
             for (i = 0; i < numSimilarRaters; i++) {
                 rating = weightRatings[0];
                 let raterId = rating.getItem();
@@ -206,63 +141,13 @@ export class RatingsRunner {
                 rating = new Rating(movieId, sum / listRatings.length);
                 rList.push(rating);
             }
-        }
+        })
+
+
 
         rList.sort(Rating.compareTo);
         return rList;
 
     }
-
-    //TODO : implement Filters
-    // public ArrayList<Rating> getSimilarRatingsByFilter(String id , int numSimilarRaters , int minimalRaters,Filter filterCriteria)
-    // {
-    //     ArrayList<Rating> weightRatings = getSimilarities(id);
-
-
-    //     ArrayList<String> movieIDList = MovieDatabase.filterBy(filterCriteria);
-
-    //     //movie ID and their weighted average ratings
-    //     ArrayList<Rating> rList = new ArrayList<>();
-    //     Rating r;  
-    //     Rater rater;
-
-    //     for(String movieId: movieIDList)
-    //     {
-    //         ArrayList<Double> listRatings = new ArrayList<>();
-
-    //         for(int i =0;i<numSimilarRaters;i++)
-    //         {
-    //             r = weightRatings.get(i);
-    //             String raterId = r.getItem();
-    //             double raterClossness = r.getValue();
-
-    //             if(raterClossness<=0)
-    //             {break;}
-
-    //             rater = RaterDatabase.getRater(raterId);
-
-    //             if(rater.hasRating(movieId))
-    //             {
-    //                 listRatings.add(raterClossness*rater.getRating(movieId));
-    //             }
-
-    //         }
-    //         Double sum=0.0;
-
-    //          if(listRatings.size()>=minimalRaters)
-    //         {
-    //             for(Double rating : listRatings)
-    //             {
-    //                 sum+=parseInt(rating);
-    //             } 
-    //             r = new Rating(movieId, sum/listRatings.size());
-    //             rList.add(r);
-    //         }
-
-    //     }
-    //     Collections.sort(rList,Collections.reverseOrder());
-    //     return rList;
-
-    // }
 
 }

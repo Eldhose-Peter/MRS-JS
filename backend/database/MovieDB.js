@@ -3,6 +3,7 @@ import { join } from 'path';
 import { homedir } from 'os';
 import { parse } from "csv-parse";
 import { Movie } from '../pdo/Movie.js';
+import { DirectorFilter } from '../filters/DirectorFilter.js';
 
 export class MovieDB {
     ourMovies; //maps movieId to movie
@@ -100,22 +101,22 @@ export class MovieDB {
         return this.ourMovies.size;
     }
 
-    //TODO : implement Filters
-    // filterBy(Filter f) {
-    //    this.initialize();
-    //     let list
-    //     this.ourMovies.keys().forEach(id => {
-    //         if (f.satisfies(id)) {
-    //             list.push(id);
-    //         }
-    //     });
-    //     return list;
-    // }
+    static filterBy(f) {
+       this.initialize();
+        let list =[];
+        let arr = this.ourMovies.keys()
 
-    // TODO : remove this function after implementing Filters
-    static getMovieIdList() {
-        this.initialize();
-        return this.ourMovies.keys()
+        while(true){
+            let item = arr.next();
+            let id = item.value
+            if(item.done)
+                break;
+            if ( f.satisfies(id)) {
+                list.push(id);
+            }
+
+        }
+        return list;
     }
 
 }
