@@ -4,6 +4,7 @@ export class AllFilters extends Filters{
     filters;
 
     constructor(){
+        super()
         this.filters = [];
     }
 
@@ -11,12 +12,18 @@ export class AllFilters extends Filters{
         this.filters.push(f);
     }
 
-    statisfies(id){
+    satisfies(id){
+        let flag =0;
         this.filters.forEach((f)=>{
-            if(!f.statisfies(id)){
-                return false
+            if(!f.satisfies(id)){
+                flag =1
             }
         })
-        return true;
+        if(flag==0){
+            return true;
+        }
+        else{
+            return false;
+        }
     }
 }

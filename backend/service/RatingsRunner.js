@@ -20,6 +20,34 @@ export class RatingsRunner {
     }
 
 
+    //gets the average rating for a movieId
+    getAverageByID(movieId, minimalRaters) {
+        let numRates = [];
+
+        this.myRaters = RaterDB.getRaters();
+        while (true) {
+            let item = this.myRaters.next();
+            let rater = item.value
+            if (item.done)
+                break
+
+            if (rater.hasRating(movieId)) {
+                numRates.push(rater.getRating(movieId))
+            }
+        }
+
+        let sum = 0
+        //only take the average if there is atleast minimum number of Raters
+        if (numRates.length >= minimalRaters) {
+            numRates.forEach((rate) => {
+                sum += parseInt(rate)
+            })
+            return sum / numRates.length
+        }
+        return 0
+    }
+
+
     getAverageRatings(minimalRaters, filterCriteria) {
 
         let movieIDList = [];

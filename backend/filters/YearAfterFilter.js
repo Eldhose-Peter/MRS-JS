@@ -1,7 +1,7 @@
-import { MovieDB } from "../database/MovieDB";
-import { Filters } from "./Filters";
+import { MovieDB } from "../database/MovieDB.js";
+import { Filters } from "./Filters.js";
 
-export class YearFilter extends Filters {
+export class YearAfterFilter extends Filters {
     myYear;
 
     constructor(year){

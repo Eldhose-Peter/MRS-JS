@@ -1,6 +1,6 @@
 export class Filters{
 
-    statisfies(id){
+    satisfies(id){
         console.log("Inside filters satisfy")
     }
 }

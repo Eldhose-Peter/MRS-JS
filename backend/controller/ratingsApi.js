@@ -17,24 +17,11 @@ ratingsApi.get("/averageRatings", async function (req, res) {
             runner = new MovieRunner();
             await runner.initializeDB();
         }
-        runner.printAverageRatings().then((val)=>{
-            //console.log("result:", val)
-            res.status(200).json(val)
-        })
-
-    } catch (error) {
-        res.sendStatus(500);
-    }
-});
-
-ratingsApi.get("/averageRatingsByDirector", async function (req, res) {
-
-    try {
-        if(!runner){
-            runner = new MovieRunner();
-            await runner.initializeDB();
+        let filters;
+        if(req.query.filterBy){
+            filters = req.query.filterBy
         }
-        runner.printAverageRatingsByDirector().then((val)=>{
+        runner.printAverageRatings(req.query.minimalRaters,filters).then((val)=>{
             //console.log("result:", val)
             res.status(200).json(val)
         })
@@ -43,6 +30,7 @@ ratingsApi.get("/averageRatingsByDirector", async function (req, res) {
         res.sendStatus(500);
     }
 });
+
 
 ratingsApi.get("/similarRatings", async function (req, res) {
 
@@ -51,7 +39,11 @@ ratingsApi.get("/similarRatings", async function (req, res) {
             runner = new MovieRunner();
             await runner.initializeDB();
         }
-        runner.printSimilarRatings().then((val)=>{
+        let filters;
+        if(req.query.filterBy){
+            filters = req.query.filterBy
+        }
+        runner.printSimilarRatings(req.query.id,req.query.numSimilarRaters,req.query.minimalRaters,filters).then((val)=>{
             //console.log("result:", val)
             res.status(200).json(val)
         })

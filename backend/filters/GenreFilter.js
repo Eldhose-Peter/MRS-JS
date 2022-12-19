@@ -1,5 +1,5 @@
-import { MovieDB } from "../database/MovieDB";
-import { Filters } from "./Filters";
+import { MovieDB } from "../database/MovieDB.js";
+import { Filters } from "./Filters.js";
 
 export class GenreFilter extends Filters {
     myGenres;
@@ -12,7 +12,7 @@ export class GenreFilter extends Filters {
     satisfies(id){
 
         let genre = MovieDB.getGenres(id);
-        return this.myGenres.includes(genre);
+        return genre.includes(this.myGenres);
         
     }
 }
